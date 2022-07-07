@@ -1,6 +1,6 @@
 # 2️⃣ deploy redis
 
-##  use official docker.io/librery/redis
+## Use official docker.io/librery/redis
 
 * get image full registry name by running:
 

@@ -7,8 +7,30 @@
 DOCKER_COMPOSE := /usr/local/bin/docker-compose
 REDIS_PASSWORD := 'MyS3cr3t'
 
+RELEASE_NAME	 := ping-app
+CHART_BASE_DIR := ./deployment/helm/charts
+CHART_NAME		 := pingalicious
+
+.PHONY: k3d-devcluster k3d-cleanup-cluster dc-build dc-push dc-stop dc-clean-run dc-run
 .PHONY: docker-check redis-container-start redis-container-stop redis-container-cleanup node-cleanup node-npm-install node-run-local 
 
+# k3d crete devcluster
+k3d-devcluster:
+	@k3d cluster create devcluster \
+	--api-port 127.0.0.1:6443 \
+	-p 80:80@loadbalancer \
+	-p 443:443@loadbalancer
+
+k3d-cleanup-cluster:
+	@k3d cluster delete devcluster
+
+# kustomize labs
+
+ping-kustomize-deploy:
+	@kubectl apply -k ./deployment/kustomize/manifests
+
+
+# node-* run nodejs local 
 docker-check:
 	@docker ps &>/dev/null || echo "docker not running"
 
